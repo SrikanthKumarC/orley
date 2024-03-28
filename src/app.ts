@@ -113,9 +113,9 @@ app.get('/reset-reminders', async (req: Request, res: Response) => {
   res.json({message: 'All reminders deleted'});
 });
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello ');
-});
+// app.get('/', (req: Request, res: Response) => {
+//   res.send('Hello ');
+// });
 
 app.listen(3000, () => {
   console.log('Server is running on http://localhost:3000');
