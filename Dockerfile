@@ -15,5 +15,6 @@ COPY package.json ./
 COPY . .  
 RUN pnpm install && npm run build
 ENV ADMIN_TOKEN=cb62f201cc3b66cbdceb01d85c7dd616964b81590679a1085fac81b9c77ee72ee25083b00a05f26efa8a0ecc84189c77821889efa178947c7426f62f12ba27f4
+ENV DATABASE_URL="file:./database.db"
 EXPOSE 3000
 CMD ["npm", "start"]
