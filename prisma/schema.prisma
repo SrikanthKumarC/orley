@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+
+model Reminder {
+  id        String   @id @default(cuid())
+  title     String
+  body      String
+  createdAt DateTime @default(now())
+  // id of the user who created the reminder
+  userId    String
+  time      DateTime
+  complete  Boolean  @default(false)
+}
+
+model expiredReminders {
+  id        String   @id @default(cuid())
+  title     String
+  body      String
+  createdAt DateTime @default(now())
+  userId    String
+  time      DateTime
+  complete  Boolean  @default(false)
+}
+
+model TodaysReminders {
+  id        String   @id @default(cuid())
+  title     String
+  body      String
+  createdAt DateTime @default(now())
+  userId    String
+  time      DateTime
+  complete  Boolean  @default(false)
+}
