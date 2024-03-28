@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.verify = void 0;
 const verify = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const token = req.headers.authorization;
-    console.log({ token });
     if (!token) {
         res.status(401).json({ error: 'Token is required' });
     }
