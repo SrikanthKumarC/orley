@@ -14,8 +14,6 @@ WORKDIR /usr/src/app
 COPY package.json ./
 COPY . .  
 RUN pnpm install && npm run build
-ENV DATABASE_URL="file:./database.db"
 RUN pnpm install prisma --save-dev && npx prisma generate
-RUN npx prisma migrate dev --name init
 EXPOSE 3000
 CMD ["pnpm", "start"]

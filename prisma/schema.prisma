@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -40,4 +40,5 @@ model TodaysReminders {
   userId    String
   time      DateTime
   complete  Boolean  @default(false)
+  reminderId String @default("not set")
 }

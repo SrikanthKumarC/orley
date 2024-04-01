@@ -1,7 +1,3 @@
 ./node_modules
 node_modules
 .env
-prisma/database.db
-./prisma/database.db
-prisma/migrations
-./prisma/migrations

@@ -3,10 +3,15 @@ const app = express();
 import {Request, Response} from 'express';
 import {PrismaClient} from '@prisma/client';
 import {verify} from './middleware/verify';
+import {sendReminders} from './scripts/email';
+import cors from 'cors';
+
 app.use(express.json());
+// use body parser
 
 const prisma = new PrismaClient();
 
+app.use(cors({credentials: true, origin: true}));
 app.use(verify);
 
 app.get('/reminders', async (req: Request, res: Response) => {
@@ -21,6 +26,23 @@ app.get('/reminders/:userId', async (req: Request, res: Response) => {
   res.json(reminders);
 });
 
+app.get('/reminders-today', async (req: Request, res: Response) => {
+  const reminders = await prisma.todaysReminders.findMany();
+  res.json(reminders);
+});
+
+app.get('/reminders/:userId', async (req: Request, res: Response) => {
+  const reminders = await prisma.reminder.findMany({
+    where: {userId: req.params.userId},
+  });
+  res.json(reminders);
+});
+
+app.get('/send-reminders', async (req: Request, res: Response) => {
+  await sendReminders();
+  res.json({message: 'Reminders sent'});
+});
+
 app.get('/set-complete/:id', async (req: Request, res: Response) => {
   const id = req.params.id;
   const reminder = await prisma.reminder.update({
@@ -31,6 +53,7 @@ app.get('/set-complete/:id', async (req: Request, res: Response) => {
 });
 
 app.post('/reminder', async (req: Request, res: Response) => {
+  console.log(req.body);
   const {title, body, time, userId} = req.body;
   const reminder = await prisma.reminder.create({
     data: {
@@ -80,7 +103,7 @@ app.get('/transfer-expired-reminders', async (req: Request, res: Response) => {
   res.json({message: 'Expired reminders transferred and deleted'});
 });
 
-app.get('/sync-today-reminders', async () => {
+app.get('/sync-today-reminders', async (req: Request, res: Response) => {
   // get all reminders that are due today
   const reminders = await prisma.reminder.findMany({
     where: {
@@ -101,9 +124,11 @@ app.get('/sync-today-reminders', async () => {
         title: reminder.title,
         body: reminder.body,
         time: reminder.time,
+        reminderId: reminder.id,
       },
     });
   }
+  res.json({message: 'Todays reminders synced'});
 });
 
 app.get('/reset-reminders', async (req: Request, res: Response) => {
@@ -117,6 +142,6 @@ app.get('/reset-reminders', async (req: Request, res: Response) => {
 //   res.send('Hello ');
 // });
 
-app.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000');
+app.listen(3001, () => {
+  console.log('Server is running on http://localhost:3001');
 });
